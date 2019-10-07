@@ -136,3 +136,87 @@ ggp_base
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
 ![](ggplot2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+\#\#themes
+
+``` r
+ggp_base +
+theme(legend.position = "bottom" )
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+ggp_base +
+theme_bw()+
+theme(legend.position = "bottom" )
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+more than one dataset
+
+``` r
+central_park =
+  weather_df%>%
+  filter(name == "CentralPark_NY")
+
+waikiki = 
+  weather_df %>%
+  filter(name == "Waikiki_HA")
+
+ggplot(data = waikiki,aes(x = date,y = tmax,color = name))+
+  geom_point() +
+  geom_line(data = central_park) ### adding data for central park
+```
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+breif aside about colors
+
+``` r
+waikiki%>%
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point(color = "blue")
+```
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+\#\#multi-panel plots
+
+``` r
+ggp_scatter = 
+  weather_df %>%
+  ggplot(aes(x = tmin,y = tmax)) +
+  geom_point()
+
+ggp_density = 
+  weather_df %>%
+  ggplot(aes(x = tmin)) +
+  geom_density()
+  
+  ggp_box = 
+  weather_df %>%
+  ggplot(aes(x = name,y = tmax)) +
+  geom_boxplot()
+  
+  (ggp_scatter+ggp_density)/ggp_box ### using patchwork to put plots together
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+    ## Warning: Removed 15 rows containing non-finite values (stat_density).
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+data manipulation
