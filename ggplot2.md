@@ -220,3 +220,118 @@ ggp_density =
 ![](ggplot2_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 data manipulation
+
+``` r
+## change the order of location
+ weather_df %>%
+  mutate(
+    name = factor(name),
+    name = fct_relevel(name,"Waikiki_HA","CentralPark_NY") 
+    ## waikiki appears first in plot
+  ) %>%
+  ggplot(aes(x = name,y = tmax, color = name)) +
+  geom_boxplot()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+reorder instead of relevel
+
+``` r
+ weather_df %>%
+  mutate(
+    name = factor(name),
+    name = fct_reorder(name,tmax) 
+    ## order based on tmax since waterhole has the lowest tmax, it appears first
+  ) %>%
+  ggplot(aes(x = name,y = tmax, color = name)) +
+  geom_boxplot()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+``` r
+weather_df %>%
+  mutate(
+    name = factor(name),
+    name = fct_relevel(name,"Waterhole_WA","Waikiki_HA") 
+    ## waikiki appears first in plot
+  ) %>%
+  ggplot(aes(x = tmin, y = tmax, color = name))+
+  geom_point()
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+## restructure then plot
+
+``` r
+weather_df %>%
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation",
+    values_to = "temperture"
+  )%>%
+ggplot(aes(x=temperture,fill = observation))+
+  geom_density(alpha = 0.5)+
+  facet_grid(~name)+
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 18 rows containing non-finite values (stat_density).
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+``` r
+pup_data = 
+  read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
+  janitor::clean_names() %>%
+  mutate(sex = recode(sex, `1` = "male", `2` = "female")) 
+
+litter_data = 
+  read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
+  janitor::clean_names() %>%
+  select(-pups_survive) %>%
+  separate(group, into = c("dose", "day_of_tx"), sep = 3) %>%
+  mutate(wt_gain = gd18_weight - gd0_weight,
+         day_of_tx = as.numeric(day_of_tx))
+fas_data = left_join(pup_data, litter_data, by = "litter_number") 
+
+## wheather the dose or day of treatment has impact on previous factors
+fas_data %>%
+  drop_na()%>%
+  ggplot(aes(x = dose, y = pd_ears ))+
+  geom_violin()+
+  facet_grid(day_of_tx ~.) ### day of treatment against everything else
+```
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+``` r
+fas_data %>%
+  pivot_longer(
+    pd_ears:pd_walk,
+    names_to = "outcome",
+    values_to = "pn_day"
+  ) %>%
+    drop_na(dose, day_of_tx,pn_day) %>% 
+  mutate(
+    outcome = factor(outcome),
+    outcome = fct_reorder(outcome, pn_day)
+  )%>%
+  ggplot(aes(x = dose, y = pn_day ))+
+  geom_violin()+
+  facet_grid(day_of_tx ~ outcome)
+```
+
+![](ggplot2_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+``` r
+## think about tidying the data
+```
