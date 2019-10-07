@@ -144,6 +144,14 @@ ggplot_ridge_temp =
 ggsave("ggplot_temp_ridge.pdf",ggplot_ridge_temp)
 ```
 
+```{r, fig.width = 12}
+weather_df %>%
+  ggplot(aes(x = tmin,y = tmax)) + 
+  geom_point(aes(color = name),alpha = 0.4) +
+  geom_smooth(se = FALSE)
+```
+
+
 
 
 
