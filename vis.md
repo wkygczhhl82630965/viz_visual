@@ -135,3 +135,51 @@ weather_df %>%
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
 ![](vis_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+facet–seperate it into three panels based on location
+
+``` r
+weather_df %>%
+  ggplot(aes(x = tmin,y = tmax,color = name)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(se = FALSE)  +
+  facet_grid(~name)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 15 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](vis_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+weather_df %>%
+  ggplot(aes(x= date, y=tmax,color = name))+
+  geom_point(aes(size=prcp)) + ###include precp information
+  geom_smooth()
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](vis_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+weather_df %>%
+  ggplot(aes(x= date, y=tmax,color = name))+
+  geom_point(aes(size=prcp), alpha = 0.35) + ###include precp information
+  geom_smooth(size=2)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](vis_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
