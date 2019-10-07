@@ -10,6 +10,7 @@ library(tidyverse)
 library(ggridges)
 ```
 
+#### create the weather data
 ```{r}
 weather_df = 
   rnoaa::meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
@@ -23,5 +24,44 @@ weather_df =
     tmin = tmin / 10,
     tmax = tmax / 10) %>%
   select(name, id, everything())
+```
+
+## create a ggplot
+```{r}
+ggplot(weather_df,aes(x = tmin,y = tmax)) +
+  geom_point()
+
+```
+
+alternate way of making this plot
+```{r}
+weather_df %>%
+  ggplot(aes(x = tmin,y = tmax)) + geom_point()
+
+weather_df %>% filter(name == "CentralPark_NY")
+
+##adding color
+weather_df %>%
+  ggplot(aes(x = tmin,y = tmax)) + 
+  geom_point(aes(color = name),alpha = 0.4) 
+##alpha for transparency  , different color for different location
+```
+
+why do aes positions matter?
+
+first
+```{r}
+weather_df %>%
+  ggplot(aes(x = tmin,y = tmax)) + 
+  geom_point(aes(color = name),alpha = 0.4) +
+  geom_smooth(se = FALSE)
+
+```
+vs
+```{r}
+weather_df %>%
+  ggplot(aes(x = tmin,y = tmax,color = name)) + ## color now is applying in everywehre
+  geom_point(alpha = 0.4) +
+  geom_smooth(se = FALSE)
 ```
 
