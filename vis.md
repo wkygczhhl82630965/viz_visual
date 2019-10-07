@@ -183,3 +183,94 @@ weather_df %>%
     ## Warning: Removed 3 rows containing missing values (geom_point).
 
 ![](vis_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+2d density
+
+``` r
+## install.package("hexbin")
+weather_df %>%
+  ggplot(aes(x= tmin, y=tmax)) +
+  geom_bin2d()
+```
+
+    ## Warning: Removed 15 rows containing non-finite values (stat_bin2d).
+
+![](vis_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+## more kinds of plots\!
+
+``` r
+weather_df %>%
+  ggplot(aes(x = tmax,fill = name)) +
+  geom_histogram(position = "dodge")
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+![](vis_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+``` r
+weather_df %>%
+  ggplot(aes(x = tmax,fill = name)) +
+  geom_histogram()+
+  facet_grid(~name)
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+![](vis_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+
+``` r
+### density plots
+weather_df %>%
+  ggplot(aes(x = tmax,fill = name)) +
+  geom_density(alpha = 0.3)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density).
+
+![](vis_files/figure-gfm/unnamed-chunk-10-3.png)<!-- -->
+
+``` r
+weather_df %>%
+  ggplot(aes(x = name, y = tmax)) +
+  geom_violin()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
+
+![](vis_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+ridge plots
+
+``` r
+weather_df %>%
+  ggplot(aes(x = tmax,y = name)) +
+  geom_density_ridges()
+```
+
+    ## Picking joint bandwidth of 1.84
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density_ridges).
+
+![](vis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+saving plots
+
+``` r
+ggplot_ridge_temp =
+  weather_df %>%
+  ggplot(aes(x = tmax,y = name)) +
+  geom_density_ridges()
+ggsave("ggplot_temp_ridge.pdf",ggplot_ridge_temp)
+```
+
+    ## Saving 7 x 5 in image
+
+    ## Picking joint bandwidth of 1.84
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density_ridges).

@@ -92,4 +92,64 @@ weather_df %>%
   geom_smooth(size=2)
 ```
 
+2d density
+```{r}
+## install.package("hexbin")
+weather_df %>%
+  ggplot(aes(x= tmin, y=tmax)) +
+  geom_bin2d()
+  
+
+```
+
+## more kinds of plots!
+```{r}
+weather_df %>%
+  ggplot(aes(x = tmax,fill = name)) +
+  geom_histogram(position = "dodge")
+
+
+weather_df %>%
+  ggplot(aes(x = tmax,fill = name)) +
+  geom_histogram()+
+  facet_grid(~name)
+
+### density plots
+weather_df %>%
+  ggplot(aes(x = tmax,fill = name)) +
+  geom_density(alpha = 0.3)
+
+```
+
+
+```{r}
+weather_df %>%
+  ggplot(aes(x = name, y = tmax)) +
+  geom_violin()
+```
+
+ridge plots
+```{r}
+weather_df %>%
+  ggplot(aes(x = tmax,y = name)) +
+  geom_density_ridges()
+```
+
+saving plots
+```{r}
+ggplot_ridge_temp =
+  weather_df %>%
+  ggplot(aes(x = tmax,y = name)) +
+  geom_density_ridges()
+ggsave("ggplot_temp_ridge.pdf",ggplot_ridge_temp)
+```
+
+
+
+
+
+
+
+
+
 
