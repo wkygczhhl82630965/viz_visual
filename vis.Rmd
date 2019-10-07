@@ -1,0 +1,12 @@
+---
+title: "ggplot1"
+author: "Keyi Wang"
+date: "10/7/2019"
+output: github_document
+---
+
+```{r setup,include=FALSE}
+library(tidyverse)
+library(ggridges)
+```
+
