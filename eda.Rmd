@@ -51,3 +51,134 @@ weather_df%>%
 ```
 
 
+make a table
+```{r}
+weather_df %>%
+  count(name)%>%
+  knitr::kable()
+```
+
+## 2x2 tables
+```{r}
+weather_df %>%
+  filter(name != "Waikiki_HA") %>% ### only include central and waterhole
+  mutate(
+    coldness = case_when(   ## "case when" is helpful when you want to create one variable based on two or more levels 
+      tmax < 5 ~ "cold",
+      tmax >=5 ~ "not cold",
+      TRUE     ~" " ## blank for anything that doesn't satisfy the above situation
+    )
+  )%>%
+group_by(name,coldness) %>%
+  count() %>%
+  pivot_wider(
+    names_from = coldness,
+    values_from = n
+  )
+  
+  
+  
+```
+
+```{r}
+weather_df %>%
+  filter(name != "Waikiki_HA") %>% ### only include central and waterhole
+  mutate(
+    coldness = case_when(   ## "case when" is helpful when you want to create one variable based on two or more levels 
+      tmax < 5 ~ "cold",
+      tmax >=5 ~ "not cold",
+      TRUE     ~" " ## blank for anything that doesn't satisfy the above situation
+    )
+  )%>%
+  janitor::tabyl(name, coldness) ### give the 2x2 table directly
+```
+
+general summaries
+```{r}
+weather_df %>%
+  group_by(name, month) %>%
+  summarize(
+    n = n(),
+    mean_tmax = mean(tmax, na.rm = TRUE), ## drop na
+    sd_tmax = sd(tmax,  na.rm = TRUE),
+    median_prcp = median(prcp, na.rm = TRUE)
+  )%>%
+  ggplot(aes(x = month, y = mean_tmax, color =name))+
+  geom_point()+geom_line()
+
+## this is a check on missing values
+weather_df %>%
+  filter(is.na(tmax))
+```
+
+```{r}
+weather_df %>%
+  group_by(name, month) %>%
+  summarize(
+    n = n(),
+    mean_tmax = mean(tmax, na.rm = TRUE),
+  )%>%
+  pivot_wider(
+    names_from = name,
+    values_from = mean_tmax
+  )%>%
+  knitr::kable(digits = 1)
+```
+
+don't forget you can ungroup
+```{r}
+weather_df%>%
+  group_by(name)%>%
+  ungroup
+```
+
+
+group and mutate
+```{r}
+weather_df %>%
+  group_by(name) %>%
+  mutate(
+    mean_tmax = mean(tmax, na.rm = TRUE),
+    centered_tmax = tmax - mean_tmax
+  ) %>%
+  ggplot(aes(x = date, y  = centered_tmax, color = name)) +
+  geom_point()
+```
+
+
+window function in grouped mutates
+```{r}
+weather_df %>%
+  group_by(name, month)%>%
+  mutate(
+    tmax_rank = min_rank(desc(tmax))    ## ith hottest day
+  )%>%
+  filter(tmax_rank ==1)
+
+```
+
+
+lags and leads
+```{r}
+weather_df %>%
+  group_by(name) %>%
+  mutate(
+    lagged_tmax = lag(tmax),
+    one_day_tmax_change = tmax - lagged_tmax
+  ) %>%
+  summarize(sd_daily_change = sd(one_day_tmax_change, na.rm = TRUE))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
